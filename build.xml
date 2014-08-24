@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="user_joomla_auth" default="dist">
+
+    <property name="version"  value="0.5.1a" override="true" />
+    <property name="buildDir"  value="./build" override="true" />
+    <property name="appDir"  value="${buildDir}/user_joomla_auth" override="true" />
+
+    <!-- ============================================  -->
+    <!-- Target: prepare                               -->
+    <!-- ============================================  -->
+    <target name="prepare">
+        <echo msg="Verzeichnis initialisieren: ./build" />
+        <delete dir="${buildDir}" />
+        <mkdir dir="${buildDir}" />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: build                                 -->
+    <!-- ============================================  -->
+    <target name="build" depends="prepare">
+
+        <echo msg="Copying appinfo..." />
+        <copy file="./appinfo/version" tofile="${appDir}/appinfo/version">
+            <filterchain>
+                <replacetokens begintoken="%%" endtoken="%%">
+                    <token key="version" value="${version}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+
+        <copy file="./appinfo/app.php" tofile="${appDir}/appinfo/app.php" />
+        <copy file="./appinfo/info.xml" tofile="${appDir}/appinfo/info.xml" />
+
+        <echo msg="Copy root Files..l" />
+        <copy file="./README.md" tofile="${appDir}/README.md" />
+        <copy file="./settings.php" tofile="${appDir}/settings.php" />
+        <copy file="./user_joomla_auth.php" tofile="${appDir}/user_joomla_auth.php" />
+
+        <echo msg="Copying assets files to build directory..." />
+        <copy todir="${appDir}/css">
+            <fileset dir="css">
+                <include name="**" />
+            </fileset>
+        </copy>
+
+        <copy todir="${appDir}/joomla">
+            <fileset dir="joomla">
+                <include name="**" />
+            </fileset>
+        </copy>
+
+        <copy todir="${appDir}/l10n">
+            <fileset dir="l10n">
+                <include name="**" />
+            </fileset>
+        </copy>
+
+        <copy todir="${appDir}/lib">
+            <fileset dir="lib">
+                <include name="**" />
+            </fileset>
+        </copy>
+
+        <copy todir="${appDir}/templates">
+            <fileset dir="templates">
+                <include name="**" />
+            </fileset>
+        </copy>
+
+    </target>
+
+    <!-- ============================================  -->
+    <!-- (DEFAULT)  Target: dist                       -->
+    <!-- ============================================  -->
+    <target name="dist" depends="build">
+        <echo msg="Creating archive..." />
+
+        <zip destfile="${buildDir}/user_joomla_auth-${version}.zip">
+            <fileset dir="${buildDir}">
+                <include name="**" />
+            </fileset>
+        </zip>
+
+        <echo msg="Files copied and compressed in build directory OK!" />
+    </target>
+
+</project>
